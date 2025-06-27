@@ -235,7 +235,7 @@ jobs:
           name: llama-bin-ubuntu-vulkan-x64.zip
 
   windows-cpu:
-    runs-on: windows-latest
+    runs-on: windows-2025
 
     strategy:
       matrix:
@@ -298,7 +298,7 @@ jobs:
           name: llama-bin-win-cpu-${{ matrix.arch }}.zip
 
   windows:
-    runs-on: windows-latest
+    runs-on: windows-2025
 
     env:
       OPENBLAS_VERSION: 0.3.23
