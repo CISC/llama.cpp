@@ -235,7 +235,7 @@ jobs:
           name: llama-bin-ubuntu-vulkan-x64.zip
 
   windows-cpu:
-    runs-on: windows-2022
+    runs-on: windows-2025
 
     strategy:
       matrix:
@@ -255,6 +255,12 @@ jobs:
           key: windows-latest-cmake-cpu-${{ matrix.arch }}
           variant: ccache
           evict-old-files: 1d
+
+      - name: debug list files
+        shell: cmd
+        run: |
+          cd /d "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Redist\MSVC\"
+          dir /s libomp*
 
       - name: Install Ninja
         run: |
