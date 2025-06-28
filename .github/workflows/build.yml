@@ -805,6 +805,8 @@ jobs:
       - name: libCURL
         id: get_libcurl
         uses: ./.github/actions/windows-setup-curl
+        with:
+          architecture: ${{ matrix.arch == 'x64' && 'win64' || 'win64a' }}
 
       - name: Build
         id: cmake_build
