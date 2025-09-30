@@ -132,7 +132,7 @@ jobs:
           provenance: false
           # using github experimental cache
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-to: type=gha,mode=min
           # return to this if the experimental github cache is having issues
           #cache-to: type=local,dest=/tmp/.buildx-cache
           #cache-from: type=local,src=/tmp/.buildx-cache
@@ -151,7 +151,7 @@ jobs:
           provenance: false
           # using github experimental cache
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-to: type=gha,mode=min
           # return to this if the experimental github cache is having issues
           #cache-to: type=local,dest=/tmp/.buildx-cache
           #cache-from: type=local,src=/tmp/.buildx-cache
@@ -170,7 +170,7 @@ jobs:
           provenance: false
           # using github experimental cache
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-to: type=gha,mode=min
           # return to this if the experimental github cache is having issues
           #cache-to: type=local,dest=/tmp/.buildx-cache
           #cache-from: type=local,src=/tmp/.buildx-cache
