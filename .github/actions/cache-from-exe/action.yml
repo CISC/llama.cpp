@@ -13,35 +13,38 @@ inputs:
   key:
     description: "Cache key"
     required: true
+outputs:
+  cache-hit:
+    description: "actions/cache output"
+    value: ${{ steps.cache-exe.outputs.cache-hit }}
 
 runs:
   using: "composite"
   steps:
-      - name: Setup Cache
-        uses: actions/cache@v4
-        id: cache-exe
-        with:
-          path: ${{ inputs.path }}
-          key: ${{ inputs.key }}
+    - name: Setup Cache
+      uses: actions/cache@v4
+      id: cache-exe
+      with:
+        path: ${{ inputs.path }}
+        key: ${{ inputs.key }}
 
-      - name: Install into cached directory
-        if: steps.cache-exe.cache-hit != 'true'
-        id: depends
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = "Stop"
-          write-host "Downloading Installer EXE"
-          Invoke-WebRequest -Uri "${{ inputs.url }}" -OutFile "${env:RUNNER_TEMP}\cache-install.exe"
-          write-host "Installing"
-          $proc = Start-Process "${env:RUNNER_TEMP}\cache-install.exe" -ArgumentList '${{ inputs.args }}' -NoNewWindow -PassThru
-          $completed = $proc.WaitForExit(600000)
-          if (-not $completed) {
-              Write-Error "Installer timed out after 10 minutes. Killing the process"
-              $proc.Kill()
-              exit 1
-          }
-          if ($proc.ExitCode -ne 0) {
-              Write-Error "Installer failed with exit code $($proc.ExitCode)"
-              exit 1
-          }
-          write-host "Completed installation"
+    - name: Install into cached directory
+      if: steps.cache-exe.outputs.cache-hit != 'true'
+      shell: pwsh
+      run: |
+        $ErrorActionPreference = "Stop"
+        write-host "Downloading Installer EXE"
+        Invoke-WebRequest -Uri "${{ inputs.url }}" -OutFile "${env:RUNNER_TEMP}\cache-install.exe"
+        write-host "Installing"
+        $proc = Start-Process "${env:RUNNER_TEMP}\cache-install.exe" -ArgumentList '${{ inputs.args }}' -NoNewWindow -PassThru
+        $completed = $proc.WaitForExit(600000)
+        if (-not $completed) {
+            Write-Error "Installer timed out after 10 minutes. Killing the process"
+            $proc.Kill()
+            exit 1
+        }
+        if ($proc.ExitCode -ne 0) {
+            Write-Error "Installer failed with exit code $($proc.ExitCode)"
+            exit 1
+        }
+        write-host "Completed installation"
