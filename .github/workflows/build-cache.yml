@@ -15,6 +15,10 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
+      - name: Clone
+        id: checkout
+        uses: actions/checkout@v4
+
       - name: Get latest Vulkan SDK version
         id: vulkan_sdk_version
         run: |
@@ -34,6 +38,10 @@ jobs:
       SPACEMIT_IME_TOOLCHAIN_VERSION: "1.1.2"
 
     steps:
+      - name: Clone
+        id: checkout
+        uses: actions/checkout@v4
+
       - name: Cache SpacemiT Toolchain
         uses: ./.github/actions/cache-from-tar
         with:
@@ -50,9 +58,13 @@ jobs:
       HIPSDK_INSTALLER_VERSION: "25.Q3"
 
     steps:
+      - name: Clone
+        id: checkout
+        uses: actions/checkout@v4
+
       - name: Cache ROCm Installation
         id: cache-rocm
-        uses: actions/cache@v4
+        uses: ./.github/actions/cache-from-exe
         with:
           url: https://download.amd.com/developer/eula/rocm-hub/AMD-Software-PRO-Edition-${{ env.HIPSDK_INSTALLER_VERSION }}-WinSvr2022-For-HIP.exe
           path: C:\Program Files\AMD\ROCm
