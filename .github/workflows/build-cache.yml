@@ -86,5 +86,4 @@ jobs:
         if: steps.cache-rocm.outputs.cache-hit != 'true'
         uses: ./.github/actions/windows-setup-rocm
         with:
-          path: C:\Program Files\AMD\ROCm
           version: ${{ env.HIPSDK_INSTALLER_VERSION }}

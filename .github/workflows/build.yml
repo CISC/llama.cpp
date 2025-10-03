@@ -408,9 +408,24 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y build-essential mesa-vulkan-drivers libxcb-xinput0 libxcb-xinerama0 libxcb-cursor-dev libcurl4-openssl-dev
 
+      - name: Get latest Vulkan SDK version
+        id: vulkan_sdk_version
+        run: |
+          echo "VULKAN_SDK_VERSION=$(curl https://vulkan.lunarg.com/sdk/latest/linux.txt)" >> "$GITHUB_ENV"
+
       - name: Use Vulkan SDK Cache
-        id: cache_vulkan_sdk
-        uses: ./.github/actions/ubuntu-vulkan-cache
+        uses: actions/cache@v4
+        id: cache-sdk
+        with:
+          path: ./vulkan_sdk
+          key: vulkan-sdk-${{ env.VULKAN_SDK_VERSION }}-${{ runner.os }}
+
+      - name: Setup Vulkan SDK
+        if: steps.cache-sdk.outputs.cache-hit != 'true'
+        uses: ./.github/actions/linux-setup-vulkan
+        with:
+          path: ./vulkan_sdk
+          version: ${{ env.VULKAN_SDK_VERSION }}
 
       - name: Build
         id: cmake_build
@@ -1095,6 +1110,7 @@ jobs:
     env:
       # The ROCm version must correspond to the version used in the HIP SDK.
       ROCM_VERSION: "6.4.2"
+      # Make sure this is in sync with build-cache.yml
       HIPSDK_INSTALLER_VERSION: "25.Q3"
 
     steps:
@@ -1110,8 +1126,17 @@ jobs:
           7z x data.tar
 
       - name: Use ROCm Installation Cache
+        uses: actions/cache@v4
         id: cache-rocm
-        uses: ./.github/actions/windows-rocm-cache
+        with:
+          path: C:\Program Files\AMD\ROCm
+          key: rocm-${{ env.HIPSDK_INSTALLER_VERSION }}-${{ runner.os }}
+
+      - name: Setup ROCm
+        if: steps.cache-rocm.outputs.cache-hit != 'true'
+        uses: ./.github/actions/linux-setup-spacemit
+        with:
+          version: ${{ env.HIPSDK_INSTALLER_VERSION }}
 
       - name: Verify ROCm
         id: verify

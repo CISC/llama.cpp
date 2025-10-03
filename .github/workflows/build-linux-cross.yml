@@ -257,11 +257,26 @@ jobs:
   ubuntu-24-riscv64-cpu-spacemit-ime-cross:
     runs-on: ubuntu-24.04
 
+    env:
+      # Make sure this is in sync with build-cache.yml
+      SPACEMIT_IME_TOOLCHAIN_VERSION: "1.1.2"
+
     steps:
       - uses: actions/checkout@v4
 
       - name: Use SpacemiT Toolchain Cache
-        uses: ./.github/actions/ubuntu-spacemit-cache
+        uses: actions/cache@v4
+        id: cache-toolchain
+        with:
+          path: ./spacemit_toolchain
+          key: spacemit-ime-toolchain-v${{ env.SPACEMIT_IME_TOOLCHAIN_VERSION }}-${{ runner.os }}
+
+      - name: Setup SpacemiT Toolchain
+        if: steps.cache-toolchain.outputs.cache-hit != 'true'
+        uses: ./.github/actions/linux-setup-spacemit
+        with:
+          path: ./spacemit_toolchain
+          version: ${{ env.SPACEMIT_IME_TOOLCHAIN_VERSION }}
 
       - name: Build
         run: |

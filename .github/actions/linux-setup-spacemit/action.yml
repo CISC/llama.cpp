@@ -1,6 +1,9 @@
 name: "Linux - Setup SpacemiT Toolchain"
 description: "Setup SpacemiT Toolchain for Linux"
 inputs:
+  path:
+    description: "Installation path"
+    required: true
   version:
     description: "SpacemiT toolchain version"
     required: true
