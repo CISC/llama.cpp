@@ -389,7 +389,6 @@ jobs:
 
   ubuntu-24-cmake-vulkan:
     runs-on: ubuntu-24.04
-    needs: build-cache
 
     steps:
       - name: Clone
