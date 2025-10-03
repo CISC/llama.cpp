@@ -23,6 +23,7 @@ runs:
 
       - name: Unarchive to cached directory
         if: steps.cache-tar.cache-hit != 'true'
+        shell: bash
         run: |
           mkdir -p ${{ inputs.path }}
           cd ${{ inputs.path }}

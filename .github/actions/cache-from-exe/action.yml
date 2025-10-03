@@ -27,6 +27,7 @@ runs:
       - name: Install into cached directory
         if: steps.cache-exe.cache-hit != 'true'
         id: depends
+        shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
           write-host "Downloading Installer EXE"
