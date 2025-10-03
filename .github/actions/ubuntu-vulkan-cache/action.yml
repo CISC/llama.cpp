@@ -10,6 +10,7 @@ runs:
   steps:
     - name: Get latest Vulkan SDK version
       id: vulkan_sdk_version
+      shell: bash
       run: |
         echo "VULKAN_SDK_VERSION=$(curl https://vulkan.lunarg.com/sdk/latest/linux.txt)" >> "$GITHUB_ENV"
 
