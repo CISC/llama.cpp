@@ -17,3 +17,4 @@ runs:
       with:
         url: https://archive.spacemit.com/toolchain/spacemit-toolchain-linux-glibc-x86_64-v${{ inputs.version }}.tar.xz
         path: ${{ inputs.path }}
+        strip: 1

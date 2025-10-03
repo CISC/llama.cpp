@@ -17,3 +17,4 @@ runs:
       with:
         url: https://sdk.lunarg.com/sdk/download/${{ inputs.version }}/linux/vulkan_sdk.tar.xz
         path: ${{ inputs.path }}
+        strip: 1
