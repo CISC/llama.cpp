@@ -1,6 +1,7 @@
 name: Build Actions Cache
 
 on:
+  workflow_dispatch: # allows manual triggering
   workflow_call: # reusable
   schedule:
     - cron: '0 * * * *'
@@ -54,7 +55,7 @@ jobs:
           mkdir -p spacemit-toolchain
           cd spacemit-toolchain
           curl --no-progress-meter https://archive.spacemit.com/toolchain/spacemit-toolchain-linux-glibc-x86_64-v${{ env.SPACEMIT_IME_TOOLCHAIN_VERSION }}.tar.xz | tar -Jx --strip-components=1
-  
+
   windows-2022-rocm-cache:
     runs-on: windows-2022
 
