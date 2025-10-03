@@ -1,0 +1,22 @@
+name: "Create SpcemiT cache"
+description: "Cache SpacemiT Toolchain"
+inputs:
+  version:
+    description: "SpecemiT toolchain version (change the default, do not pass input)"
+    required: false
+    default: "1.1.2"
+outputs:
+  cache-hit:
+    description: "actions/cache output"
+    value: ${{ steps.cache-spacemit.outputs.cache-hit }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Cache SpacemiT Toolchain
+      id: cache-spacemit
+      uses: ./.github/actions/cache-from-tar
+      with:
+        url: https://archive.spacemit.com/toolchain/spacemit-toolchain-linux-glibc-x86_64-v${{ inputs.version }}.tar.xz
+        path: ./spacemit_toolchain
+        key: spacemit-ime-toolchain-v${{ inputs.version }}-${{ runner.os }}
