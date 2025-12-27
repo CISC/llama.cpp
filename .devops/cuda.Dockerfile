@@ -60,7 +60,8 @@ RUN apt-get update \
     git \
     python3 \
     python3-pip \
-    && pip install --break-system-packages --upgrade pip setuptools wheel \
+    python3-wheel \
+    && pip install --break-system-packages --upgrade setuptools \
     && pip install --break-system-packages -r requirements.txt \
     && apt autoremove -y \
     && apt clean -y \
