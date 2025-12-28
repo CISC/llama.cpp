@@ -40,8 +40,8 @@ jobs:
           # https://github.com/ggml-org/llama.cpp/issues/11888
           #- { tag: "cpu", dockerfile: ".devops/cpu.Dockerfile", platforms: "linux/amd64,linux/arm64", full: true, light: true, server: true, free_disk_space: false }
           - { tag: "cpu",    dockerfile: ".devops/cpu.Dockerfile",    platforms: "linux/amd64", full: true, light: true, server: true, free_disk_space: false, runs_on: "ubuntu-22.04" }
-          - { tag: "cuda cuda12", dockerfile: ".devops/cuda.Dockerfile", platforms: "linux/amd64", full: true, light: true, server: true, free_disk_space: true,  runs_on: "ubuntu-22.04", cuda_version: "12.4.0" }
-          - { tag: "cuda13", dockerfile: ".devops/cuda.Dockerfile",   platforms: "linux/amd64", full: true, light: true, server: true, free_disk_space: true,  runs_on: "ubuntu-22.04", cuda_version: "13.1.0" }
+          - { tag: "cuda cuda12", dockerfile: ".devops/cuda.Dockerfile", platforms: "linux/amd64", full: true, light: true, server: true, free_disk_space: true,  runs_on: "ubuntu-22.04", cuda_version: "12.4.0", ubuntu_version: "22.04" }
+          - { tag: "cuda13", dockerfile: ".devops/cuda.Dockerfile",   platforms: "linux/amd64", full: true, light: true, server: true, free_disk_space: true,  runs_on: "ubuntu-22.04", cuda_version: "13.1.0", ubuntu_version: "24.04" }
           - { tag: "musa",   dockerfile: ".devops/musa.Dockerfile",   platforms: "linux/amd64", full: true, light: true, server: true, free_disk_space: true,  runs_on: "ubuntu-22.04" }
           - { tag: "intel",  dockerfile: ".devops/intel.Dockerfile",  platforms: "linux/amd64", full: true, light: true, server: true, free_disk_space: true,  runs_on: "ubuntu-22.04" }
           - { tag: "vulkan", dockerfile: ".devops/vulkan.Dockerfile", platforms: "linux/amd64", full: true, light: true, server: true, free_disk_space: false, runs_on: "ubuntu-22.04" }
@@ -138,6 +138,7 @@ jobs:
           target: full
           provenance: false
           build-args: |
+            ${{ matrix.config.ubuntu_version && format('UBUNTU_VERSION={0}', matrix.config.ubuntu_version) || '' }}
             ${{ matrix.config.cuda_version && format('CUDA_VERSION={0}', matrix.config.cuda_version) || '' }}
           # using github experimental cache
           #cache-from: type=gha
@@ -162,6 +163,7 @@ jobs:
           target: light
           provenance: false
           build-args: |
+            ${{ matrix.config.ubuntu_version && format('UBUNTU_VERSION={0}', matrix.config.ubuntu_version) || '' }}
             ${{ matrix.config.cuda_version && format('CUDA_VERSION={0}', matrix.config.cuda_version) || '' }}
           # using github experimental cache
           #cache-from: type=gha
@@ -186,6 +188,7 @@ jobs:
           target: server
           provenance: false
           build-args: |
+            ${{ matrix.config.ubuntu_version && format('UBUNTU_VERSION={0}', matrix.config.ubuntu_version) || '' }}
             ${{ matrix.config.cuda_version && format('CUDA_VERSION={0}', matrix.config.cuda_version) || '' }}
           # using github experimental cache
           #cache-from: type=gha
