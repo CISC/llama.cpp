@@ -1,4 +1,4 @@
-ARG UBUNTU_VERSION=22.04
+ARG UBUNTU_VERSION=24.04
 # This needs to generally match the container host's environment.
 ARG CUDA_VERSION=12.4.0
 # Target the CUDA build image
@@ -60,7 +60,8 @@ RUN apt-get update \
     git \
     python3 \
     python3-pip \
-    && pip install --upgrade pip setuptools wheel \
+    python3-wheel \
+    && pip install --break-system-packages --upgrade setuptools \
     && pip install --break-system-packages -r requirements.txt \
     && apt autoremove -y \
     && apt clean -y \
