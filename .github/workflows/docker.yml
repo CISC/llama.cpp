@@ -85,7 +85,8 @@ jobs:
           PREFIX="ghcr.io/${REPO_OWNER}/${REPO_NAME}:"
 
           # list all tags possible
-          for tag in "${{ matrix.config.tag }}"; do
+          tags="${{ matrix.config.tag }}"
+          for tag in $tags; do
               if [[ "$tag" == "cpu" ]]; then
                   TYPE=""
               else
