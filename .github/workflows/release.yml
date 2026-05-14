@@ -104,7 +104,7 @@ jobs:
         id: pack_artifacts
         run: |
           cp LICENSE ./build/bin/
-          tar -czvf llama-${{ steps.tag.outputs.name }}-bin-macos-${{ matrix.build }}.tar.gz -s "s,^.$,llama-${{ steps.tag.outputs.name }}," -s ",./,llama-${{ steps.tag.outputs.name }}/," -C ./build/bin .
+          tar -czvf llama-${{ steps.tag.outputs.name }}-bin-macos-${{ matrix.build }}.tar.gz -s ",^.$,llama-${{ steps.tag.outputs.name }}," -s ",./,llama-${{ steps.tag.outputs.name }}/," -C ./build/bin .
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v6
