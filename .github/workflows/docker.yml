@@ -70,8 +70,8 @@ jobs:
           # Keep all build targets in one place and derive merge targets from it.
           cat > build-matrix.json <<'JSON'
           [
-            { "tag": "cuda13", "dockerfile": ".devops/cuda.Dockerfile", "cuda_version": "13.3", "platforms": "linux/amd64", "full": true, "light": true, "server": true, "free_disk_space": true, "runs_on": "ubuntu-24.04" },
-            { "tag": "cuda13", "dockerfile": ".devops/cuda.Dockerfile", "cuda_version": "13.3", "platforms": "linux/arm64", "full": true, "light": true, "server": true, "free_disk_space": true, "runs_on": "ubuntu-24.04-arm" }
+            { "tag": "cuda13", "dockerfile": ".devops/cuda.Dockerfile", "cuda_version": "13.3.0", "platforms": "linux/amd64", "full": true, "light": true, "server": true, "free_disk_space": true, "runs_on": "ubuntu-24.04" },
+            { "tag": "cuda13", "dockerfile": ".devops/cuda.Dockerfile", "cuda_version": "13.3.0", "platforms": "linux/arm64", "full": true, "light": true, "server": true, "free_disk_space": true, "runs_on": "ubuntu-24.04-arm" }
           ]
           JSON
 
