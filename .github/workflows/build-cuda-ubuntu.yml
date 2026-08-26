@@ -139,7 +139,7 @@ jobs:
         with:
           key: cuda-ubuntu-22.04-hip
           folder: llama.cpp
-          evict-old-files: 1d
+          evict-old-files: 2d
           hf_bucket: ggml-org/cache
           save: true
 
