@@ -52,7 +52,7 @@ jobs:
         id: build_depends
         run: |
           apk update
-          apk add --no-cache clang clang-dev alpine-sdk cmake openssl-dev
+          apk add --no-cache clang clang-dev alpine-sdk linux-headers cmake openssl-dev
 
       - name: Default to Clang
         run: |
