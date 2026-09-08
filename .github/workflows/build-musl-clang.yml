@@ -1,0 +1,69 @@
+name: CI (musl+clang)
+
+on:
+  workflow_dispatch: # allows manual triggering
+  push:
+    branches:
+      - master
+    paths: [
+      '.github/workflows/build-musl-clang.yml',
+      '**/CMakeLists.txt',
+      '**/.cmake',
+      '**/*.h',
+      '**/*.hpp',
+      '**/*.c',
+      '**/*.cpp',
+    ]
+
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths: [
+      '.github/workflows/build-musl-clang.yml',
+      '**/CMakeLists.txt',
+      '**/.cmake',
+      '**/*.h',
+      '**/*.hpp',
+      '**/*.c',
+      '**/*.cpp'
+    ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref && github.ref || github.run_id }}
+  cancel-in-progress: true
+
+env:
+  GGML_NLOOP: 3
+  GGML_N_THREADS: 1
+  LLAMA_ARG_LOG_COLORS: 1
+  LLAMA_ARG_LOG_PREFIX: 1
+  LLAMA_ARG_LOG_TIMESTAMPS: 1
+
+jobs:
+  musl-clang:
+    runs-on: ubuntu-24.04
+    container: "alpine:latest"
+
+    steps:
+      - name: Clone
+        id: checkout
+        uses: actions/checkout@v6
+
+      - name: Build Dependencies
+        id: build_depends
+        run: |
+          apk update
+          apk add --no-cache clang clang-dev alpine-sdk cmake openssl-dev
+
+      - name: Default to Clang
+        run: |
+          echo "CC=clang" >> "$GITHUB_ENV"
+          echo "CXX=clang++" >> "$GITHUB_ENV"
+
+      - name: Build
+        id: cmake_build
+        run: |
+          cmake -B build \
+            -DGGML_NATIVE=OFF \
+            -DLLAMA_FATAL_WARNINGS=ON \
+            -DGGML_RPC=ON
+          cmake --build build --config Release -j $(nproc)
