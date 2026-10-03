@@ -114,6 +114,8 @@ jobs:
           subject-path: 'release/*'
 
       - name: Create and push git tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG="${{ steps.tag.outputs.name }}"
           if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null 2>&1; then
