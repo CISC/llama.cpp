@@ -43,6 +43,7 @@ jobs:
 
     outputs:
       should_release: ${{ steps.check.outputs.should_release }}
+      tag_name: ${{ steps.tag.outputs.name }}
 
     steps:
       - id: check
@@ -59,6 +60,29 @@ jobs:
             fi
           else
             echo "should_release=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Clone
+        if: ${{ steps.check.outputs.should_release == 'true' }}
+        id: checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Determine tag name
+        if: ${{ steps.check.outputs.should_release == 'true' }}
+        id: tag
+        uses: ./.github/actions/get-tag-name
+
+      - name: Create and push git tag
+        if: ${{ steps.check.outputs.should_release == 'true' }}
+        run: |
+          TAG="${{ steps.tag.outputs.name }}"
+          if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null 2>&1; then
+            echo "Tag ${TAG} already exists, skipping creation"
+          else
+            git tag "${TAG}"
+            git push origin "${TAG}"
           fi
 
   macos-cpu:
@@ -129,12 +153,12 @@ jobs:
         id: pack_artifacts
         run: |
           cp LICENSE ./build/bin/
-          tar -czvf llama-${{ steps.tag.outputs.name }}-bin-macos-${{ matrix.build }}.tar.gz -s ",^\.,llama-${{ steps.tag.outputs.name }}," -C ./build/bin .
+          tar -czvf llama-${{ needs.check-release.outputs.tag_name }}-bin-macos-${{ matrix.build }}.tar.gz -s ",^\.,llama-${{ needs.check-release.outputs.tag_name }}," -C ./build/bin .
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
-          path: llama-${{ steps.tag.outputs.name }}-bin-macos-${{ matrix.build }}.tar.gz
+          path: llama-${{ needs.check-release.outputs.tag_name }}-bin-macos-${{ matrix.build }}.tar.gz
           archive: false
 
       - name: ccache-clear
@@ -212,12 +236,12 @@ jobs:
         id: pack_artifacts
         run: |
           cp LICENSE ./build/bin/
-          tar -czvf llama-${{ steps.tag.outputs.name }}-bin-ubuntu-${{ matrix.build }}.tar.gz --transform "s,^\.,llama-${{ steps.tag.outputs.name }}," -C ./build/bin .
+          tar -czvf llama-${{ needs.check-release.outputs.tag_name }}-bin-ubuntu-${{ matrix.build }}.tar.gz --transform "s,^\.,llama-${{ needs.check-release.outputs.tag_name }}," -C ./build/bin .
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
-          path: llama-${{ steps.tag.outputs.name }}-bin-ubuntu-${{ matrix.build }}.tar.gz
+          path: llama-${{ needs.check-release.outputs.tag_name }}-bin-ubuntu-${{ matrix.build }}.tar.gz
           archive: false
 
       - name: ccache-clear
@@ -298,12 +322,12 @@ jobs:
         id: pack_artifacts
         run: |
           cp LICENSE ./build/bin/
-          tar -czvf llama-${{ steps.tag.outputs.name }}-bin-ubuntu-vulkan-${{ matrix.build }}.tar.gz --transform "s,^\.,llama-${{ steps.tag.outputs.name }}," -C ./build/bin .
+          tar -czvf llama-${{ needs.check-release.outputs.tag_name }}-bin-ubuntu-vulkan-${{ matrix.build }}.tar.gz --transform "s,^\.,llama-${{ needs.check-release.outputs.tag_name }}," -C ./build/bin .
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
-          path: llama-${{ steps.tag.outputs.name }}-bin-ubuntu-vulkan-${{ matrix.build }}.tar.gz
+          path: llama-${{ needs.check-release.outputs.tag_name }}-bin-ubuntu-vulkan-${{ matrix.build }}.tar.gz
           archive: false
 
       - name: ccache-clear
