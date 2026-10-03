@@ -41,6 +41,9 @@ jobs:
   check-release:
     runs-on: ubuntu-slim
 
+    permissions:
+      contents: write
+
     outputs:
       should_release: ${{ steps.check.outputs.should_release }}
       tag_name: ${{ steps.tag.outputs.name }}
