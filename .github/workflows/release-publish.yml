@@ -113,18 +113,6 @@ jobs:
         with:
           subject-path: 'release/*'
 
-      - name: Create and push git tag
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          TAG="${{ steps.tag.outputs.name }}"
-          if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null 2>&1; then
-            echo "Tag ${TAG} already exists, skipping creation"
-          else
-            git tag "${TAG}" ${{ github.event.workflow_run.head_sha }}
-            git push origin "${TAG}"
-          fi
-
       - name: Create release
         id: create_release
         uses: ggml-org/action-create-release@v1
