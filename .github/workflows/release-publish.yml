@@ -222,5 +222,6 @@ jobs:
     uses: ./.github/workflows/ui-publish.yml
     with:
       version_tag: ${{ needs.publish.outputs.tag_name }}
+      run_id: ${{ github.event.workflow_run.id }}
     secrets:
       hf_token: ${{ secrets.HF_TOKEN_UI_STATIC_OUTPUT }}
