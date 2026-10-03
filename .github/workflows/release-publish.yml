@@ -8,6 +8,8 @@ on:
       - completed
     branches:
       - master
+    inputs:
+      - name: should_release
 
 env:
   GH_TOKEN: ${{ github.token }}
@@ -15,7 +17,7 @@ env:
 
 jobs:
   publish:
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.jobs.check-release.outputs.should_release == 'true' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.inputs.should_release == 'true' }}
 
     # Fine-grant permission
     # https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
@@ -25,7 +27,7 @@ jobs:
         id-token: write
         attestations: write
 
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-latest
 
     outputs:
       tag_name: ${{ steps.tag.outputs.name }}
@@ -214,7 +216,7 @@ jobs:
             }
 
   ui-publish:
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.jobs.check-release.outputs.should_release == 'true' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.inputs.should_release == 'true' }}
 
     needs:
       - publish
